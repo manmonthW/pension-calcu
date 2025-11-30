@@ -1,6 +1,12 @@
-# 养老金计算器微信小程序
+# 养老金计算器
 
-一个专业的养老金计算器微信小程序，支持两种退休方案的对比分析。
+一个专业的养老金计算器，支持两种退休方案的对比分析。
+
+**支持双平台：**
+- 🌐 **Web网页版** - 可部署到Vercel等平台，浏览器直接访问
+- 📱 **微信小程序版** - 在微信中使用，体验更佳
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/YOUR_USERNAME/pension-calculator-miniprogram)
 
 ## 功能特性
 
@@ -29,25 +35,54 @@
 
 ## 技术栈
 
-- 微信小程序原生开发
-- WXML + WXSS + JavaScript
+- HTML + CSS + JavaScript（Web版）
+- 微信小程序原生开发（WXML + WXSS）
 - 响应式设计，适配各种手机屏幕
 
-## 使用方法
+## 快速开始
+
+### Web版本
+
+#### 部署到Vercel（推荐）
+1. Fork本仓库
+2. 在Vercel中导入项目
+3. 自动部署完成，获得访问链接
+
+#### 本地运行
+```bash
+# 克隆项目
+git clone https://github.com/YOUR_USERNAME/pension-calculator-miniprogram.git
+
+# 进入目录
+cd pension-calculator-miniprogram
+
+# 启动本地服务器
+npx serve .
+# 或
+npm run dev
+```
+
+### 微信小程序版本
 
 1. 在微信开发者工具中导入项目
 2. 配置appid（可使用测试号）
 3. 点击预览，用手机微信扫码体验
 
+详细部署说明请查看 [DEPLOYMENT.md](./DEPLOYMENT.md)
+
 ## 项目结构
 
 ```
-├── app.js          # 小程序入口文件
-├── app.json        # 小程序配置
-├── app.wxss        # 全局样式
-├── sitemap.json    # 站点地图配置
+├── index.html          # Web版主页面
+├── pension_calc.html   # Web版计算器（同上）
+├── vercel.json         # Vercel部署配置
+├── package.json        # 项目配置
+├── DEPLOYMENT.md       # 部署说明文档
+├── app.js              # 小程序入口文件
+├── app.json            # 小程序配置
+├── sitemap.json        # 小程序站点地图
 └── pages/
-    └── index/      # 主页面
+    └── index/          # 小程序主页面
         ├── index.js    # 页面逻辑
         ├── index.json  # 页面配置
         ├── index.wxml  # 页面结构

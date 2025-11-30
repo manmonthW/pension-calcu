@@ -1,0 +1,19 @@
+{
+  "name": "pension-calculator",
+  "version": "1.0.0",
+  "description": "专业的养老金计算器 - 支持两种退休方案对比分析",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx serve .",
+    "build": "echo 'No build needed for static site'"
+  },
+  "keywords": [
+    "pension",
+    "calculator",
+    "retirement",
+    "养老金",
+    "计算器"
+  ],
+  "author": "",
+  "license": "MIT"
+}
