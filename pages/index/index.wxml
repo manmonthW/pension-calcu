@@ -1,0 +1,232 @@
+<!--pages/index/index.wxml-->
+<view class="container">
+  <view class="header">
+    <text class="title">养老金计算器 Pro 版</text>
+    <text class="tag">自动计算全部参数</text>
+  </view>
+
+  <!-- 基本信息 -->
+  <view class="card">
+    <view class="section-title">一、基本信息</view>
+    <view class="grid">
+      <view class="form-item">
+        <text class="label">当前年龄</text>
+        <input class="input" type="number" value="{{formData.ageNow}}" data-field="ageNow" bindinput="onInputChange" />
+      </view>
+      <view class="form-item">
+        <text class="label">城市</text>
+        <input class="input" type="text" value="{{formData.city}}" data-field="city" bindinput="onInputChange" />
+      </view>
+      <view class="form-item">
+        <text class="label">已缴费年限（年）</text>
+        <input class="input" type="number" value="{{formData.yearsPaidNow}}" data-field="yearsPaidNow" bindinput="onInputChange" />
+      </view>
+      <view class="form-item">
+        <text class="label">当前缴费指数（如 300% 写 3）</text>
+        <input class="input" type="digit" value="{{formData.indexNow}}" data-field="indexNow" bindinput="onInputChange" />
+      </view>
+      <view class="form-item">
+        <text class="label">个人账户余额（元）</text>
+        <input class="input" type="number" value="{{formData.personalBalanceNow}}" data-field="personalBalanceNow" bindinput="onInputChange" />
+      </view>
+    </view>
+  </view>
+
+  <!-- 方案对比 -->
+  <view class="card">
+    <view class="section-title">二、退休参数（方案 1 / 方案 2 并排）</view>
+    
+    <view class="grid2">
+      <view class="plan-section">
+        <text class="plan-title">方案 1：正常退休</text>
+        <view class="grid">
+          <view class="form-item">
+            <text class="label">退休年龄</text>
+            <input class="input" type="number" value="{{formData.agePlan1}}" data-field="agePlan1" bindinput="onPlanAgeChange" />
+          </view>
+          <view class="form-item">
+            <text class="label">计发基数（当前）</text>
+            <input class="input" type="number" value="{{formData.base1}}" data-field="base1" bindinput="onInputChange" />
+          </view>
+          <view class="form-item">
+            <text class="label">计发月数（自动）</text>
+            <input class="input" type="number" value="{{formData.factor1}}" disabled />
+          </view>
+        </view>
+      </view>
+
+      <view class="plan-section">
+        <text class="plan-title">方案 2：延迟退休</text>
+        <view class="grid">
+          <view class="form-item">
+            <text class="label">退休年龄</text>
+            <input class="input" type="number" value="{{formData.agePlan2}}" data-field="agePlan2" bindinput="onPlanAgeChange" />
+          </view>
+          <view class="form-item">
+            <text class="label">计发基数（未来估算）</text>
+            <input class="input" type="number" value="{{formData.base2}}" data-field="base2" bindinput="onInputChange" />
+          </view>
+          <view class="form-item">
+            <text class="label">计发月数（自动）</text>
+            <input class="input" type="number" value="{{formData.factor2}}" disabled />
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 延迟期间 -->
+  <view class="card">
+    <view class="section-title">三、延迟期间（方案 1 → 方案 2）</view>
+    <view class="grid">
+      <view class="form-item">
+        <text class="label">延迟期缴费指数（如 60% 写 0.6）</text>
+        <input class="input" type="digit" value="{{formData.indexFuture}}" data-field="indexFuture" bindinput="onInputChange" />
+      </view>
+      <view class="form-item">
+        <text class="label">失业金月收入（如无填 0）</text>
+        <input class="input" type="number" value="{{formData.unempIncome}}" data-field="unempIncome" bindinput="onInputChange" />
+      </view>
+      <view class="form-item">
+        <text class="label">60% 档灵活缴费/月</text>
+        <input class="input" type="digit" value="{{formData.flexPay}}" data-field="flexPay" bindinput="onInputChange" />
+      </view>
+      <view class="form-item">
+        <text class="label">其中进入个人账户/月</text>
+        <input class="input" type="digit" value="{{formData.flexToPersonal}}" data-field="flexToPersonal" bindinput="onInputChange" />
+      </view>
+      <view class="form-item">
+        <text class="label">4050 补贴后自己实际缴费/月</text>
+        <input class="input" type="digit" value="{{formData.flexPayAfterSubsidy}}" data-field="flexPayAfterSubsidy" bindinput="onInputChange" />
+      </view>
+      <view class="form-item">
+        <text class="label">希望领取的失业金年数（系统自动调整 ≤2 且 ≤延迟年数）</text>
+        <input class="input" type="number" value="{{formData.unempYears}}" data-field="unempYears" bindinput="onInputChange" />
+      </view>
+      <view class="form-item">
+        <text class="label">灵活缴费年数</text>
+        <input class="input" type="number" value="{{formData.flexYears}}" data-field="flexYears" bindinput="onInputChange" />
+      </view>
+    </view>
+  </view>
+
+  <view class="card">
+    <button class="btn" bindtap="runCalc">开始测算</button>
+  </view>
+
+  <view class="card">
+    <view class="section-title">四、测算结果</view>
+    <view class="result">
+      <block wx:if="{{!result}}">
+        <text>请点击"开始测算"。</text>
+      </block>
+      <block wx:else>
+        <view class="result-title">养老金测算结果</view>
+        
+        <view class="section">
+          <view class="section-header">
+            <text class="icon">📌</text>
+            <text class="section-name">核心结论（智能摘要）</text>
+          </view>
+          <view class="metric-grid">
+            <view class="metric">
+              <text class="metric-label">方案 1 月养老金（{{result.agePlan1}} 岁退）</text>
+              <text class="metric-value">{{result.monthP1}} 元</text>
+              <text class="metric-sub">当前基数 + 现有缴费年限</text>
+            </view>
+            <view class="metric">
+              <text class="metric-label">方案 2 月养老金（{{result.agePlan2}} 岁退）</text>
+              <text class="metric-value good">{{result.monthP2}} 元</text>
+              <text class="metric-sub">延迟 {{result.delayYears}} 年 + 灵活缴费</text>
+            </view>
+            <view class="metric">
+              <text class="metric-label">退休后每月差额</text>
+              <text class="metric-value emphasis">{{result.deltaMonth >= 0 ? '+' + result.deltaMonth : result.deltaMonth}} 元</text>
+              <text class="metric-sub">（方案 2 相对方案 1）</text>
+            </view>
+            <view class="metric">
+              <text class="metric-label">预计回本年龄</text>
+              <text class="metric-value warn">{{result.coreAgeText}}</text>
+              <text class="metric-sub">含前 {{result.delayYears}} 年损失与支出</text>
+            </view>
+          </view>
+        </view>
+
+        <view class="section">
+          <view class="section-header">
+            <text class="icon">📊</text>
+            <text class="section-name">两方案关键指标对比</text>
+          </view>
+          <view class="metric-grid">
+            <view class="metric">
+              <text class="metric-label">基础养老金（方案 1）</text>
+              <text class="metric-value">{{result.baseP1}} 元/月</text>
+            </view>
+            <view class="metric">
+              <text class="metric-label">基础养老金（方案 2）</text>
+              <text class="metric-value">{{result.baseP2}} 元/月</text>
+            </view>
+            <view class="metric">
+              <text class="metric-label">基础养老金差额</text>
+              <text class="metric-value">{{result.baseDiff >= 0 ? '+' + result.baseDiff : result.baseDiff}} 元</text>
+            </view>
+            <view class="metric">
+              <text class="metric-label">个人账户养老金（方案 1）</text>
+              <text class="metric-value">{{result.indivP1}} 元/月</text>
+            </view>
+            <view class="metric">
+              <text class="metric-label">个人账户养老金（方案 2）</text>
+              <text class="metric-value">{{result.indivP2}} 元/月</text>
+            </view>
+            <view class="metric">
+              <text class="metric-label">个人账户养老金差额</text>
+              <text class="metric-value">{{result.indivDiff >= 0 ? '+' + result.indivDiff : result.indivDiff}} 元</text>
+            </view>
+            <view class="metric">
+              <text class="metric-label">方案 1 计发月数 N</text>
+              <text class="metric-value">{{result.factor1}}</text>
+            </view>
+            <view class="metric">
+              <text class="metric-label">方案 2 计发月数 N</text>
+              <text class="metric-value">{{result.factor2}}</text>
+            </view>
+          </view>
+        </view>
+
+        <view class="section">
+          <view class="section-header">
+            <text class="icon">💰</text>
+            <text class="section-name">延迟期间现金流（{{result.agePlan1}} → {{result.agePlan2}} 岁）</text>
+          </view>
+          <text class="desc">▪ 方案 1：若立即退休，在这 {{result.delayYears}} 年内可领取养老金合计：{{result.p1Income}} 元</text>
+          <text class="desc">▪ 方案 2：延迟期间净支出（失业金 + 缴费等综合）：{{result.netDelay}} 元</text>
+          <text class="desc">➡ 相比方案 1，选择方案 2 在前 {{result.delayYears}} 年的总"损失"约为：{{result.lostIncome}} 元</text>
+        </view>
+
+        <view class="section">
+          <view class="section-header">
+            <text class="icon">📈</text>
+            <text class="section-name">回本周期分析</text>
+          </view>
+          <text class="desc">▪ 延迟退休后，每月实际多领：{{result.deltaMonth}} 元</text>
+          <text class="desc">▪ 需要弥补的前期损失：{{result.lostIncome}} 元</text>
+          <text class="desc" wx:if="{{result.deltaMonth > 0 && result.beYears && isFinite(result.beYears)}}">
+            ▪ 预计需要约 {{result.beYears}} 年 才能回本，对应年龄约 {{result.beAge}} 岁。
+          </text>
+          <text class="desc" wx:else>
+            ▪ 当前参数下无法形成有效回本周期（要么月差额不为正，要么输入异常）。
+          </text>
+        </view>
+
+        <view class="section">
+          <view class="section-header">
+            <text class="icon">🧠</text>
+            <text class="section-name">AI 建议（仅供参考）</text>
+          </view>
+          <text class="desc">城市：{{result.city}}；当前年龄：{{result.ageNow}} 岁；已缴费：{{result.yearsPaidNow}} 年。</text>
+          <rich-text nodes="{{result.coreAdvice}}"></rich-text>
+        </view>
+      </block>
+    </view>
+  </view>
+</view>

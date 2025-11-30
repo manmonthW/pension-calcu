@@ -1,0 +1,15 @@
+# 微信小程序
+.DS_Store
+*.log
+node_modules/
+dist/
+.vscode/
+
+# 开发工具生成的文件
+project.config.json
+project.private.config.json
+.eslintrc.js
+
+# 临时文件
+*.tmp
+*.temp
